@@ -1,0 +1,135 @@
+{
+    "name": "drupal/webships_project",
+    "description": "Webships Project: a ready-to-use Drupal API project, installed with the Webships installer and one of its site templates: Webships Starter or WebAPI Starter. JSON:API with authentication, authorization and Swagger UI documentation.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/webships_project",
+    "support": {
+        "docs": "https://www.drupal.org/project/webships_project",
+        "issues": "https://www.drupal.org/project/issues/webships_project"
+    },
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        "assets": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    },
+    "require": {
+        "composer/installers": "^2.3",
+        "drupal/core-composer-scaffold": "^11.4",
+        "drupal/core-project-message": "^11.4",
+        "drupal/core-recipe-unpack": "^11.4",
+        "drupal/core-recommended": "^11.4",
+        "drupal/core-vendor-hardening": "^11.4",
+        "drupal/webapi_starter": "^1",
+        "drupal/webships_starter": "^1",
+        "npm-asset/swagger-ui-dist": "^5",
+        "oomphinc/composer-installers-extender": "^2.0",
+        "webship/webships": "^3"
+    },
+    "require-dev": {
+        "drush/drush": "^13.7"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "drupal/core-recipe-unpack": true,
+            "drupal/core-vendor-hardening": true,
+            "oomphinc/composer-installers-extender": true,
+            "php-http/discovery": true,
+            "php-tuf/composer-integration": true,
+            "symfony/runtime": true,
+            "tbachert/spi": false
+        },
+        "bin-dir": "vendor/bin",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "web/"
+            },
+            "file-mapping": {
+                "[web-root]/example.gitignore": false
+            }
+        },
+        "installer-types": [
+            "npm-asset"
+        ],
+        "installer-paths": {
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/swagger-ui/dist": [
+                "npm-asset/swagger-ui-dist"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library",
+                "type:npm-asset"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "web/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "web/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "web/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ],
+            "recipes/{$name}": [
+                "type:drupal-recipe"
+            ]
+        },
+        "drupal-recipe-unpack": {
+            "ignore": [
+                "drupal/webapi_starter",
+                "drupal/webships_starter"
+            ]
+        },
+        "drupal-core-vendor-hardening": {
+            "composer/composer": false
+        },
+        "drupal-core-project-message": {
+            "include-keys": [
+                "homepage",
+                "support"
+            ],
+            "post-create-project-cmd-message": [
+                "<bg=blue;fg=white>                                                            </>",
+                "<bg=blue;fg=white>  Congratulations, your Webships project is ready!          </>",
+                "<bg=blue;fg=white>                                                            </>",
+                "",
+                "<bg=yellow;fg=black>Next steps</>:",
+                "  * Start DDEV: ddev start",
+                "  * Install in the browser: ddev launch (the installer lists the site templates)",
+                "  * Or from the command line: ddev drush site:install webships -y",
+                "  * Read the API documentation: /api-docs"
+            ]
+        }
+    }
+}

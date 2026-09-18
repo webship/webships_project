@@ -1,0 +1,74 @@
+################
+# GitLab CI for the Webships Project template (a Composer "project" package).
+#
+# The drupal.org module and recipe jobs do not apply to a project template, so
+# only the templates' variables (images, database) and workflow (merge request
+# pipelines) are included. The jobs validate composer.json, then build the
+# project from this branch and install Drupal with its installer profile.
+# Documentation: https://project.pages.drupalcode.org/gitlab_templates/
+################
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+variables:
+  _TARGET_PHP: '8.4'
+  DRUPAL_CORE: '11.4.x-dev'
+  COMPOSER_NO_INTERACTION: '1'
+
+default:
+  image: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-$_TARGET_PHP_IMAGE_VARIANT:$_TARGET_PHP_IMAGE_TAG
+  interruptible: true
+
+stages:
+  - validate
+  - test
+
+composer validate:
+  stage: validate
+  script:
+    - composer --version
+    # The Webship packages use exact x-dev versions on purpose, so no --strict.
+    - composer validate
+
+# Build the project from this branch, on Drupal 11.4, and install Drupal.
+project:
+  stage: test
+  needs: []
+  services:
+    - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:$_TARGET_DB_IMAGE_TAG
+      alias: database
+  variables:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: mysql
+    MYSQL_USER: drupaltestbot
+    MYSQL_PASSWORD: drupaltestbotpw
+  # One install per site template.
+  parallel:
+    matrix:
+      - SITE_TEMPLATE: webships_starter
+        ENABLED_EXTENSION: webapi
+      - SITE_TEMPLATE: webapi_starter
+        ENABLED_EXTENSION: webapi
+  # The site templates and the 3.0.x installer are not published yet, so
+  # the install cannot resolve them. Composer validate still gates this
+  # merge request. Release order: Web API, then the site templates, then
+  # the installer, then this project template.
+  allow_failure: true
+  script:
+    - composer require --no-update "drupal/core-recommended:$DRUPAL_CORE"
+    - composer install
+    # Run the Drush PHP script directly: vendor/bin/drush is a shell proxy.
+    - export DRUSH="php -d memory_limit=-1 vendor/drush/drush/drush.php"
+    # The Webships installer, with a site template chosen without the browser.
+    - $DRUSH site:install webships -y
+      installer_site_template_form.add_ons=$SITE_TEMPLATE
+      --db-url=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+      --account-name=admin --account-pass=admin
+    - $DRUSH status --fields=drupal-version,db-status
+    - $DRUSH pm:list --status=enabled --format=list | grep -x "$ENABLED_EXTENSION"
+    # The API answers, and stays read-only.
+    - $DRUSH config:get jsonapi.settings read_only
