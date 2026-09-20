@@ -25,8 +25,8 @@
         "drupal/core-recipe-unpack": "^11.4",
         "drupal/core-recommended": "^11.4",
         "drupal/core-vendor-hardening": "^11.4",
-        "drupal/webapi_starter": "^1",
-        "drupal/webships_starter": "^1",
+        "drupal/webapi_starter": "^2",
+        "drupal/webships_starter": "^2",
         "npm-asset/swagger-ui-dist": "^5",
         "oomphinc/composer-installers-extender": "^2.0",
         "webship/webships": "^3"
@@ -127,7 +127,7 @@
                 "<bg=yellow;fg=black>Next steps</>:",
                 "  * Start DDEV: ddev start",
                 "  * Install in the browser: ddev launch (the installer lists the site templates)",
-                "  * Or from the command line: ddev drush site:install webships -y",
+                "  * Or from the command line: ddev drush site:install ../recipes/webships_starter -y",
                 "  * Read the API documentation: /api-docs"
             ]
         }

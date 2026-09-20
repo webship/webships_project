@@ -26,5 +26,5 @@ Build a throwaway DDEV sandbox from the local branch through a path repository:
 ```shell
 ddev composer create-project --stability=dev \
   --repository='{"type":"path","url":"/var/www/html/.ddev/webships_project"}' drupal/webships_project:dev-1.0.x
-ddev drush site:install webships -y
+ddev drush site:install ../recipes/webships_starter -y
 ```

@@ -41,10 +41,10 @@ ddev launch
 Or install from the command line, with the Webships Starter site template:
 
 ```shell
-ddev drush si -y webships --account-name=webmaster --site-name="My API" installer_site_template_form.add_ons=webships_starter
+ddev drush site:install ../recipes/webships_starter -y --account-name=webmaster --site-name="My API"
 ```
 
-Use `webships_starter` or `webapi_starter` as the site template.
+The path is relative to the Drupal root. Use `webships_starter` or `webapi_starter`.
 
 ## Project layout
 

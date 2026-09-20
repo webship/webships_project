@@ -53,19 +53,13 @@ project:
         ENABLED_EXTENSION: webapi
       - SITE_TEMPLATE: webapi_starter
         ENABLED_EXTENSION: webapi
-  # The site templates and the 3.0.x installer are not published yet, so
-  # the install cannot resolve them. Composer validate still gates this
-  # merge request. Release order: Web API, then the site templates, then
-  # the installer, then this project template.
-  allow_failure: true
   script:
     - composer require --no-update "drupal/core-recommended:$DRUPAL_CORE"
     - composer install
     # Run the Drush PHP script directly: vendor/bin/drush is a shell proxy.
     - export DRUSH="php -d memory_limit=-1 vendor/drush/drush/drush.php"
-    # The Webships installer, with a site template chosen without the browser.
-    - $DRUSH site:install webships -y
-      installer_site_template_form.add_ons=$SITE_TEMPLATE
+    # Install the site template from its recipe directory, relative to the Drupal root.
+    - $DRUSH site:install ../recipes/$SITE_TEMPLATE -y
       --db-url=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
       --account-name=admin --account-pass=admin
     - $DRUSH status --fields=drupal-version,db-status
