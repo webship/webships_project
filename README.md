@@ -23,12 +23,18 @@ end.
 Composer runs inside DDEV, so nothing is needed on your machine but DDEV itself.
 
 ```shell
-mkdir -p ~/workspace/projects/my-api
-cd ~/workspace/projects/my-api
-ddev config --project-type=drupal11 --docroot=web --php-version=8.4
+mkdir my-api && cd my-api
+ddev config --project-type=drupal --docroot=web
 ddev start
 ddev composer create-project drupal/webships_project:^1.0
+ddev restart
 ```
+
+`ddev restart` picks up the `.ddev/config.yaml` the template ships (PHP 8.4,
+Node.js 20, MariaDB 10.11), which lands in the project during
+`ddev composer create-project` and replaces the one `ddev config` wrote. The
+project name is not in that file: DDEV takes it from the directory, so the site
+is at `https://<directory>.ddev.site`.
 
 ## Install the site
 
@@ -45,6 +51,14 @@ ddev drush site:install ../recipes/webships_starter -y --account-name=webmaster 
 ```
 
 The path is relative to the Drupal root. Use `webships_starter` or `webapi_starter`.
+
+Everything runs inside DDEV — Composer, PHP, Drush and the database — so
+nothing is needed on your machine but
+[DDEV](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/).
+Without it, the same two steps are `composer create-project
+drupal/webships_project:^1.0 my-api` and `vendor/bin/drush site:install
+../recipes/webships_starter -y`, against a PHP 8.4 and MySQL/MariaDB stack of
+your own.
 
 ## Project layout
 
