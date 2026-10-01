@@ -26,7 +26,7 @@ Composer runs inside DDEV, so nothing is needed on your machine but DDEV itself.
 mkdir my-api && cd my-api
 ddev config --project-type=drupal --docroot=web
 ddev start
-ddev composer create-project drupal/webships_project:^1.0
+ddev composer create-project drupal/webships_project:~12.0
 ddev restart
 ```
 
@@ -52,14 +52,6 @@ ddev drush site:install ../recipes/webships_starter -y --account-name=webmaster 
 
 The path is relative to the Drupal root. Use `webships_starter` or `webapi_starter`.
 
-Everything runs inside DDEV — Composer, PHP, Drush and the database — so
-nothing is needed on your machine but
-[DDEV](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/).
-Without it, the same two steps are `composer create-project
-drupal/webships_project:^1.0 my-api` and `vendor/bin/drush site:install
-../recipes/webships_starter -y`, against a PHP 8.4 and MySQL/MariaDB stack of
-your own.
-
 ## Project layout
 
 | Path | Content |
@@ -73,10 +65,28 @@ your own.
 
 ## What is inside
 
-- Drupal core 11.4.
+- Drupal core 11.4. Drupal 12 (beta, PHP 8.5) is allowed too; see below.
 - [Web API](https://www.drupal.org/project/webapi): JSON:API from `/api`,
   read-only, with OAuth 2.0 and consumers.
 - OpenAPI documents for JSON:API and REST, rendered with Swagger UI.
+
+## Drupal 12 (beta)
+
+The template installs the latest Drupal 11 by default. It also allows Drupal 12,
+which needs PHP 8.5. To try it, set `php_version: "8.5"` in `.ddev/config.yaml`
+(a DDEV release with PHP 8.5 is needed), then:
+
+```shell
+ddev restart
+ddev composer require drupal/core-recommended:^12 drupal/search:^1 -W
+```
+
+Search left Drupal core in Drupal 12; Webships Starter uses it, so the contrib
+`drupal/search` module comes with the upgrade.
+
+Contributed modules that don't declare Drupal 12 support yet are allowed by the
+`mglaman/composer-drupal-lenient` plugin (`extra.drupal-lenient.allowed-list`).
+Some of them still fail on Drupal 12.
 
 ## Write operations
 

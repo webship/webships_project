@@ -55,7 +55,7 @@ project:
         ENABLED_EXTENSION: webapi
   script:
     - composer require --no-update "drupal/core-recommended:$DRUPAL_CORE"
-    - composer install
+    - composer update --with-all-dependencies
     # Run the Drush PHP script directly: vendor/bin/drush is a shell proxy.
     - export DRUSH="php -d memory_limit=-1 vendor/drush/drush/drush.php"
     # Install the site template from its recipe directory, relative to the Drupal root.
@@ -66,3 +66,18 @@ project:
     - $DRUSH pm:list --status=enabled --format=list | grep -x "$ENABLED_EXTENSION"
     # The API answers, and stays read-only.
     - $DRUSH config:get jsonapi.settings read_only
+
+# Drupal 12 (beta) on PHP 8.5, with the lenient plugin. Allowed to fail while
+# Drupal 12 is a beta and contributed modules catch up.
+project (Drupal 12):
+  extends: project
+  allow_failure: true
+  variables:
+    _TARGET_PHP: '8.5'
+    DRUPAL_CORE: '^12'
+  # Install the Drupal 11 default first, so the lenient plugin is active when
+  # Composer resolves Drupal 12 (the README's upgrade path).
+  before_script:
+    - composer install
+    # Search left core in Drupal 12: Webships Starter needs the contrib module.
+    - composer require --no-update drupal/search:^1
