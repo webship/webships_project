@@ -78,7 +78,8 @@ which needs PHP 8.5. To try it, set `php_version: "8.5"` in `.ddev/config.yaml`
 
 ```shell
 ddev restart
-ddev composer require drupal/core-recommended:^12 drupal/search:^1 -W
+ddev composer require --no-update drupal/core-recommended:^12 drupal/search:^1
+ddev composer update -W
 ```
 
 Search left Drupal core in Drupal 12; Webships Starter uses it, so the contrib
