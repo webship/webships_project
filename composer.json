@@ -32,6 +32,7 @@
     },
     "require": {
         "composer/installers": "^2.3",
+        "cweagans/composer-patches": "~2.0",
         "drupal/core-composer-scaffold": "^11.4 || ^12",
         "drupal/core-project-message": "^11.4 || ^12",
         "drupal/core-recipe-unpack": "^11.4 || ^12",
@@ -42,6 +43,7 @@
         "mglaman/composer-drupal-lenient": "^2.0",
         "npm-asset/swagger-ui-dist": "^5",
         "oomphinc/composer-installers-extender": "^2.0",
+        "webship/patches": "~12.0",
         "webship/webships": "~3.0"
     },
     "require-dev": {
@@ -65,7 +67,8 @@
             "php-http/discovery": true,
             "php-tuf/composer-integration": true,
             "symfony/runtime": true,
-            "tbachert/spi": false
+            "tbachert/spi": false,
+            "webship/patches": true
         },
         "bin-dir": "vendor/bin",
         "sort-packages": true,
@@ -239,6 +242,18 @@
                 "drupal/webform",
                 "drupal/xmlsitemap",
                 "drupal/yoast_seo"
+            ]
+        },
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "patches": {},
+        "composer-patches": {
+            "allowed-dependency-patches": [
+                "webship/patches",
+                "webship/drupal-patches"
             ]
         }
     }
