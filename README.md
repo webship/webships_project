@@ -31,7 +31,7 @@ ddev restart
 ```
 
 `ddev restart` picks up the `.ddev/config.yaml` the template ships (PHP 8.4,
-Node.js 20, MariaDB 10.11), which lands in the project during
+Node.js 24, MariaDB 10.11), which lands in the project during
 `ddev composer create-project` and replaces the one `ddev config` wrote. The
 project name is not in that file: DDEV takes it from the directory, so the site
 is at `https://<directory>.ddev.site`.
